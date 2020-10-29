@@ -3,11 +3,12 @@ var SERVE = 1;
 var PLAY = 2;
 var END = 3;
 var ball,pc,npc,edges,leftLine,leftDoublesLine,rightDoublesLine,rightLine,net,serviceBox1,serviceBox2
-,middleLine,gameState,racket,ballImg
+,middleLine,gameState,racket,ballImg,npcScore,pcScore,court;
 
 function preload(){
   racket = loadImage("images/racket.png");
   ballImg = loadImage("images/ball.png");
+  court = loadImage("images/GreenGrass.jpg");
 }
 function setup() {
   createCanvas(800,400);
@@ -22,6 +23,8 @@ function setup() {
   ball = createSprite(400, 340, 5, 5);
   ball.addImage(ballImg);
   ball.scale = 0.1;
+  npcScore = 0;
+  pcScore = 0;
   //npc = new Player (400,50);
   //pc = new Player (400,350);
   pc = createSprite (400,350,20,20);
@@ -35,7 +38,12 @@ function setup() {
 }
 
 function draw() {
-  background(247,247,247);
+  //background(247,247,247);
+  background(court)
+
+  stroke("white");
+  text("score" + npcScore, 100,50)
+  text("score" + pcScore, 100,350)
  
  
 
@@ -104,11 +112,19 @@ function draw() {
     npc.velocityX = 1;
 
   } 
-  if(ball.isTouching(rightLine)){
-
+  if(npc.isTouching(rightLine)){
     npc.velocityX = -1;
     console.log("npc.velocityX" + npc.velocityX);
   }
+
+  if((ball.isTouching(rightLine) || (ball.isTouching(leftLine)) && ball.y >200)){
+    npcScore += 1;
+  }
+
+  if((ball.isTouching(rightLine) || (ball.isTouching(leftLine)) && ball.y <200)){
+    pcScore += 1;
+  }
+
 
   /*if (npc.isTouching(edges[0])){
     npc.velocityX *= -1;
@@ -158,6 +174,15 @@ function draw() {
     ball.velocityX = 0;
     ball.velocityY = 0;
   }
+
+  if (npcScore === 11){
+    text("You Lost", 400,200)
+  }
+
+  if (pcScore === 11){
+    text("You Win", 400,200)
+  }
+
     
 
   drawSprites();
